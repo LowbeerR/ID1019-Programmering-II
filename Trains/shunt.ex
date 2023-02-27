@@ -23,4 +23,31 @@ defmodule Shunt do
     [{:one, length(ts)+1}, {:two, length(hs)}, {:one, -length(ts)-1}, {:two, -length(hs)} | few(Train.append(hs,ts),ys)]
     end
   end
+
+  def rules([]) do [] end
+  def rules([head | rest]) do
+    case head do
+      {_, 0} -> rules(rest)
+      {:one, n} -> case rest do
+        [{:one, m}|rest2] -> [{:one, n + m} | rules(rest2)]
+        _ -> [{:one, n}| rules(rest)]
+      end
+      {:two, n} -> case rest do
+        [{:two, m}|rest2] -> [{:two, n + m} | rules(rest2)]
+        _ -> [{:two, n} | rules(rest)]
+      end
+      _ -> :nil
+    end
+  end
+  def rules(list) do list end
+
+
+  def compress(ms) do
+    ns = rules(ms)
+    if ns == ms do
+    ms
+    else
+    compress(ns)
+    end
+    end
 end
