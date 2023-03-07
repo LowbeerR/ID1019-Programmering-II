@@ -73,8 +73,6 @@ defmodule Huffman do
   def huffman(freq) do
    freq = Enum.sort_by(freq, fn {_,x} -> x end)
    huffman_t(freq)
-  #freq = [{{char1,char2}, nr1+nr2}| huffman(rest)]
-   #freq = huffman(freq)
   end
 
   def huffman_t([{char,_}]) do char end
@@ -88,7 +86,6 @@ defmodule Huffman do
       :true -> [{char, freq}, {char2,freq2} | rest]
       :false -> [{char2,freq2} | insert({char, freq},rest)]
     end
-
   end
 
   def encode_table(tree) do
@@ -102,8 +99,6 @@ defmodule Huffman do
   end
 
   def get_codes(char, code) do [{char, Enum.reverse(code)}] end
-
-
 
   def decode_table(tree) do
     encode_table(tree)
