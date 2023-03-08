@@ -42,7 +42,7 @@ defmodule Huffman do
     decode(seq, encode)
     t1 = :os.system_time(:millisecond)
     decode_t = t1-t0
-    :io.format("File size ~w~nThe time it took to make a tree: ~w~nThe time it took to make encode table: ~w~nThe time it took to encode kallocain: ~w~nThe time it took to decode kallocain: ~w~n", [length(file), tree_t, encode_t, seq_t,decode_t])
+    :io.format("File size ~w~nComprimized size ~w~nThe time it took to make a tree: ~w~nThe time it took to make encode table: ~w~nThe time it took to encode kallocain: ~w~nThe time it took to decode kallocain: ~w~n", [length(file),div(length(seq),8), tree_t, encode_t, seq_t,decode_t])
   end
   def tree(sample) do
     freq = freq(sample)
