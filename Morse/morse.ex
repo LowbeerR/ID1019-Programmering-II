@@ -1,7 +1,13 @@
 defmodule Morse do
 
   def encode_table(tree) do
-    get_codes(tree,[])
+    list = get_codes(tree,[])
+    Enum.into(list, %{})
+  end
+
+  def decode_table(tree) do
+    list = get_codes(tree,[])
+    Enum.into(list, %{}, fn {key, value} -> {value, key} end)
   end
 
   def get_codes({_, :na, nil, nil},_) do [] end
@@ -24,37 +30,20 @@ defmodule Morse do
     [{val, Enum.reverse([32 |code ])}] ++ left ++ right
   end
 
-  def encode(text, table) do
-    lst = Enum.map(text, fn(x) -> table_lookup(table,x) end)
-     together(lst)
+ def encode(text, table) do
+    lst = Enum.map(text, fn(x) -> table[x] end)
+    together(lst)
   end
-
-  def table_lookup([], _) do [] end
-  def table_lookup([head|tail], arg) do
-    case head do
-      {^arg, list} -> list
-      {_,_} -> table_lookup(tail,arg)
-    end
-  end
-  def table_lookup(_,_) do nil end
 
   def together([]) do [] end
   def together([head|tail]) do head ++ together(tail) end
 
-  def decode([], _) do
-    []
-  end
+  def decode([], _) do [] end
   def decode(seq, table) do
-    {char, rest} = decode_char(seq, 1, table)
-    [char | decode(rest, table)]
-  end
-  def decode_char(seq, n, table) do
-    {code, rest} = Enum.split(seq, n)
-    case List.keyfind(table, code, 1) do
-      {char, _} ->
-      {char,rest}
-      nil ->
-      decode_char(seq, n+1, table)
+    {first, [_|rest]} = Enum.split_while(seq, fn x -> x != 32 end)
+    case rest == [32] do
+      :true -> [Map.get(table, first ++ [32])]
+     :false -> [Map.get(table, first ++ [32]) | decode(rest,table)]
     end
   end
 
