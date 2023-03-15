@@ -35,6 +35,20 @@ defmodule Morse do
     together(lst)
   end
 
+  def encode2(text, table) do
+   helper(text, table, [])
+  end
+
+
+  def helper([], _table, acc) do
+   together(Enum.reverse(acc))
+  end
+
+
+  def helper([head | tail], table, acc) do
+   helper(tail, table, [table[head] | acc])
+  end
+
   def together([]) do [] end
   def together([head|tail]) do head ++ together(tail) end
 
@@ -42,6 +56,15 @@ defmodule Morse do
   def decode(seq, table) do
     {first, [_|rest]} = Enum.split_while(seq, fn x -> x != 32 end)
     [Map.get(table, first ++ [32]) | decode(rest,table)]
+  end
+
+  def decode2(_,[]) do [] end
+  def decode2({:node, val, left, right}, [head|tail]) do
+    case head do
+      32 -> [val | decode2(morse(), tail)]
+      45 -> decode2(left, tail)
+      46 -> decode2(right, tail)
+    end
   end
 
   def morse() do
