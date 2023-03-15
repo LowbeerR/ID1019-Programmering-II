@@ -41,10 +41,7 @@ defmodule Morse do
   def decode([], _) do [] end
   def decode(seq, table) do
     {first, [_|rest]} = Enum.split_while(seq, fn x -> x != 32 end)
-    case rest == [32] do
-      :true -> [Map.get(table, first ++ [32])]
-     :false -> [Map.get(table, first ++ [32]) | decode(rest,table)]
-    end
+    [Map.get(table, first ++ [32]) | decode(rest,table)]
   end
 
   def morse() do
