@@ -30,27 +30,26 @@ defmodule Morse do
     [{val, Enum.reverse([32 |code ])}] ++ left ++ right
   end
 
- def encode(text, table) do
-    lst = Enum.map(text, fn(x) -> table[x] end)
-    together(lst)
+  def encode(text, table) do
+    List.foldl(Enum.reverse(Enum.map(text, fn(x) -> table[x] end)), [], fn(x,y) -> x ++ y end)
   end
 
   def encode2(text, table) do
-   helper(text, table, [])
+    helper(text, table, [])
   end
-
 
   def helper([], _table, acc) do
-   together(Enum.reverse(acc))
+   together(acc, [])
   end
-
 
   def helper([head | tail], table, acc) do
    helper(tail, table, [table[head] | acc])
   end
 
-  def together([]) do [] end
-  def together([head|tail]) do head ++ together(tail) end
+  def together([], acc) do acc end
+  def together([head|tail], acc) do
+    together(tail, head ++ acc)
+  end
 
   def decode([], _) do [] end
   def decode(seq, table) do
